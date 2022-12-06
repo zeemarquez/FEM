@@ -43,7 +43,7 @@ class MeshRender:
         self.batch = pg.graphics.Batch()
         self.bkgColor = (255, 255, 255)
         self.barWidth = 1
-        self.defaultElementColor = (194, 194, 194)
+        self.defaultElementColor = (255, 166, 234)
         self.barColor = (23, 23, 23)
         self.offsetx = 0
         self.offsety = 0
@@ -55,6 +55,7 @@ class MeshRender:
         self.autoScale = False
         self.legendTitle = ''
         self.colorElements = True
+        self.deform_scale = 1.0
     
     def drawElements(self, elements):
         
@@ -151,8 +152,20 @@ class MeshRender:
                 
                 j = (i+1)%3
                 
-                x0, y0 = self.offsetx +  element.nodes[i].x*self.scale, self.offsety + element.nodes[i].y*self.scale 
-                x1, y1 = self.offsetx +  element.nodes[j].x*self.scale, self.offsety + element.nodes[j].y*self.scale
+                if self.deform_scale != 1.0:
+                
+                    x0 = self.offsetx + (element.nodes[i].x + element.nodes[i].dx*self.deform_scale)*self.scale 
+                    y0 = self.offsety + (element.nodes[i].y + element.nodes[i].dy*self.deform_scale)*self.scale
+                    x1 = self.offsetx + (element.nodes[j].x + element.nodes[j].dx*self.deform_scale)*self.scale
+                    y1 = self.offsety + (element.nodes[j].y + element.nodes[j].dy*self.deform_scale)*self.scale
+                
+                else:
+                    x0 = self.offsetx + (element.nodes[i].x)*self.scale 
+                    y0 = self.offsety + (element.nodes[i].y)*self.scale
+                    x1 = self.offsetx + (element.nodes[j].x)*self.scale
+                    y1 = self.offsety + (element.nodes[j].y)*self.scale
+                
+                    
                 l = ((x1 - x0)**2 + (y1 - y0)**2)**0.5
                 angle = (180/mt.pi)*mt.asin((x1-x0)/l)
 
@@ -194,7 +207,7 @@ class MeshRender:
                                     )
                         )
                         
-            if self.drawElements:
+            if self.colorElements:
                 color = element.getColor()
             else:
                 color = self.defaultElementColor

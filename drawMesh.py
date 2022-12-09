@@ -48,7 +48,7 @@ class MeshRender:
         self.offsetx = 0
         self.offsety = 0
         self.legend = True
-        self.legendDiscretize = 5
+        self.legendDiscretize = 10
         self.nodesLabels = False
         self.labelAllNodes = False
         self.nodesSize = 2
@@ -97,7 +97,7 @@ class MeshRender:
                 )
                 
                 legend.append(
-                    pg.text.Label( '  ' + eng_string(colorVal),
+                    pg.text.Label( '  ' + str(round(colorVal,0)),
                             font_name='Times New Roman',
                             font_size=10,
                             x=legendx + legenddx, y=y + legenddy/2,
